@@ -79,4 +79,4 @@ class LoginActionTest(TestCase):
 '''嘉宾管理类'''
 
 
-class GuestManageTest(TestCase):
+# class GuestManageTest(TestCase):
