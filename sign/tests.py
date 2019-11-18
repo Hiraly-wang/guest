@@ -76,7 +76,30 @@ class LoginActionTest(TestCase):
         self.assertEqual(response.status_code, 302)
 
 
-'''嘉宾管理类'''
+'''测试发布会管理'''
 
 
-# class GuestManageTest(TestCase):
+class EventtManageTest(TestCase):
+
+    def setUp(self):
+        User.objects.create_user('admin','admin@admin.com','admin123456')
+        Event.objects.create(id=1,name='Apple11',limit=2000,status=False,address='Beijing',start_time='2019-11-11 09:30:00')
+        self.login_user={'username':'admin','password':'admin123456'}
+
+
+    '''测试发布会360'''
+    def test_event_mangage_success(self):
+        response=self.client.post('/login_action/',data=self.login_user)
+        response=self.client.post('/event_manage/')
+        self.assertEqual(response.status_code,200)
+        self.assertIn(b'Apple11',response.content)
+        self.assertIn(b'Beijing',response.content)
+
+    '''测试发布会搜素'''
+    def test_event_search(self):
+
+        response=self.client.post('/login_action/',data=self.login_user)
+        response=self.client.post('/search_name/',{'name':'Apple11'})
+        self.assertEqual(response.status_code,200)
+        self.assertIn(b'Apple11',response.content)
+        self.assertIn(b'Beijing',response.content)

@@ -31,15 +31,16 @@
 <!--发布会搜索表单-->
 <div class="page-header" style="padding-top: 60px;">
     <div id="navbar" class="navbar-collapse collapse">
-        <form class="navbar-form" method="get" action="/search_name/">
+        <form class="navbar-form" method="post" action="/search_name/">
             <div class="form-group">
                 <input name="name" type="text" placeholder="名称" class="form-control">
             </div>
             <button type="submit" class="btn btn-success">搜索</button>
+            <!--跨站请求伪造csrf攻击-->
+            <!--使用Django模板标签添加CSRF令牌-->
+            {% csrf_token %}
         </form>
     </div>
-    pa
-
 </div>
 <!--发布会列表-->
 <div class="row" style="padding-top: 80px;">
@@ -64,7 +65,7 @@
                     <td>{{ event.address }}</td>
                     <td>{{ event.start_time }}</td>
                     <!--target="{{ event.id }}_blank 设置链接在新窗口打开-->
-                    <td><a href="/sign_index/{{ event.id }}/" target="{{ event.id }}_blank" >签到</a></td>
+                    <td><a href="/sign_index/{{ event.id }}/" target="{{ event.id }}_blank">签到</a></td>
                 </tr>
             {% endfor %}
             </tbody>

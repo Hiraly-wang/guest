@@ -60,7 +60,7 @@ def event_manage(request):
 @login_required()
 def search_name(request):
     username = request.session.get('user', '')
-    search_name = request.GET.get('name', '')
+    search_name = request.POST.get('name', '')
     event_list = Event.objects.filter(name__contains=search_name)
     return render(request, 'event_manage.html', {'user': username,
                                                  'events': event_list})
@@ -118,7 +118,7 @@ def sign_index(request, eid):
 
 @login_required()
 # 屏蔽CSRF
-@csrf_exempt
+# @csrf_exempt
 def sign_index_action(request, eid):
     event = get_object_or_404(Event, id=eid)
     # 通过post请求获取phone

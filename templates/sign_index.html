@@ -35,6 +35,7 @@
                 <br>{{ hint }}
                 <br>{{ guest.realname }}
                 <br>{{ guest.phone }}
+                {% csrf_token %}
             </font>
         </form>
     </div>
