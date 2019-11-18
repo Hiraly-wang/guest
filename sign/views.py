@@ -123,14 +123,14 @@ def sign_index_action(request, eid):
     event = get_object_or_404(Event, id=eid)
     # 通过post请求获取phone
     phone = request.POST.get('phone', '')
-    print(phone)
+    # print(phone)
     # 获取所有的嘉宾
     # guest_list = Guest.objects.all()
     result = Guest.objects.filter(phone=phone)
     if not result:
         return render(request, 'sign_index.html', {'event': event,
                                                    'hint': 'phone error'})
-    result = Guest.objects.get(phone=phone, event_id=eid)
+    result = Guest.objects.filter(phone=phone, event_id=eid)
     if not result:
         return render(request, 'sign_index.html', {'event': event,
                                                    'hint': 'event_id or phone error'})
