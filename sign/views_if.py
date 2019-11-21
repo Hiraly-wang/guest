@@ -10,12 +10,14 @@ import time
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db.utils import IntegrityError
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from sign.models import Event, Guest
 
 '''添加发布会接口'''
 
 
+@csrf_exempt
 def add_event(request):
     eid = request.POST.get('eid', '')
     limit = request.POST.get('limit', '')
@@ -39,7 +41,7 @@ def add_event(request):
     # 日期格式错误
     except ValidationError:
         error = 'start_time format error. It Must be in YYYY-MM-DD HH:MM:SS format .'
-        return JsonResponse({'status': '10023', 'message': error})
+        return JsonResponse({'status': '10024', 'message': error})
     return JsonResponse({'status': '200', 'message': 'add event success'})
 
 
@@ -49,9 +51,8 @@ def add_event(request):
 def get_event_list(request):
     eid = request.GET.get('eid', '')
     name = request.GET.get('name', '')
-    if eid == '' or name == '':
+    if eid == '' and name == '':
         return JsonResponse({'status': '10021', 'message': 'Parameter error'})
-
     if eid != '':
         event = {}
         try:
@@ -65,8 +66,7 @@ def get_event_list(request):
             event['limit'] = result.limit
             event['address'] = result.address
             event['start_time'] = result.start_time
-            return JsonResponse({'status': '200', 'message': 'success', 'data': 'event'})
-
+            return JsonResponse({'status': '200', 'message': 'success', 'data': event})
     if name != '':
         datas = []
         results = Event.objects.filter(name__contains=name)
@@ -87,7 +87,7 @@ def get_event_list(request):
 
 '''添加嘉宾接口'''
 
-
+@csrf_exempt
 def add_guest(request):
     eid = request.POST.get('eid', '')
     realname = request.POST.get('realname', '')
@@ -113,7 +113,7 @@ def add_guest(request):
     # 发布会时间
     event_time = Event.objects.get(id=eid).start_time
     etime = str(event_time).split('.')[0]
-    timeArray = time.strptime(etime, '%Y-%M-%D %H:%M:%S')
+    timeArray = time.strptime(etime, '%Y-%m-%d %H:%M:%S')
     e_time = int(time.mktime(timeArray))
 
     # 当前时间
